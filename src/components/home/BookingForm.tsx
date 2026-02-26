@@ -41,7 +41,7 @@ export default function BookingForm() {
 
     setLoading(true);
     try {
-      const { error } = await supabase.from("requests" as any).insert({
+      const formData = {
         source_form: "online_booking",
         name,
         phone,
@@ -49,9 +49,15 @@ export default function BookingForm() {
         plate_number: plateNumber || null,
         desired_date: desiredDate || null,
         comment: comment || null,
-      });
+      };
 
+      const { error } = await supabase.from("requests" as any).insert(formData);
       if (error) throw error;
+
+      // Send email notification (fire-and-forget, don't block UI)
+      supabase.functions.invoke("send-notification", { body: formData }).catch((err) =>
+        console.error("Email notification failed:", err)
+      );
 
       setSubmitted(true);
       toast({
