@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminRequests from "./pages/admin/AdminRequests";
 import AdminRequestDetail from "./pages/admin/AdminRequestDetail";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminPrices from "./pages/admin/AdminPrices";
 
 const queryClient = new QueryClient();
 
