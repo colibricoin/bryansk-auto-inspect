@@ -56,6 +56,39 @@ export type Database = {
         }
         Relationships: []
       }
+      prices: {
+        Row: {
+          category_code: string
+          category_name: string
+          description: string
+          details: string
+          id: string
+          price_rub: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          category_code: string
+          category_name: string
+          description?: string
+          details?: string
+          id?: string
+          price_rub?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          category_code?: string
+          category_name?: string
+          description?: string
+          details?: string
+          id?: string
+          price_rub?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       requests: {
         Row: {
           admin_note: string | null

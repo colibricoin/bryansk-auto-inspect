@@ -2,3 +2,12 @@ project_id = "nnarckfwjyjpvttbycxd"
 
 [functions.send-notification]
 verify_jwt = false
+
+[functions.admin-auth]
+verify_jwt = false
+
+[functions.admin-bookings]
+verify_jwt = false
+
+[functions.admin-prices]
+verify_jwt = false

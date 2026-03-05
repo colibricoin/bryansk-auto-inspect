@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminRequests from "./pages/admin/AdminRequests";
 import AdminRequestDetail from "./pages/admin/AdminRequestDetail";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminPrices from "./pages/admin/AdminPrices";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route index element={<AdminDashboard />} />
             <Route path="requests" element={<AdminRequests />} />
             <Route path="requests/:id" element={<AdminRequestDetail />} />
+            <Route path="prices" element={<AdminPrices />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
 

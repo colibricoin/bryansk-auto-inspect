@@ -7,7 +7,7 @@ import { Lock } from "lucide-react";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function AdminLogin() {
     setError("");
     setLoading(true);
     try {
-      await adminLogin(login, password);
+      await adminLogin(email, password);
       navigate("/admin");
     } catch (err: any) {
       setError(err.message || "Ошибка авторизации");
@@ -39,11 +39,12 @@ export default function AdminLogin() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Логин</label>
+              <label className="text-sm font-medium mb-1.5 block">Email</label>
               <Input
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-                placeholder="admin"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@example.com"
                 required
                 autoFocus
               />
@@ -60,7 +61,7 @@ export default function AdminLogin() {
             </div>
 
             {error && (
-              <p className="text-sm text-destructive text-center">{error}</p>
+              <p className="text-sm text-destructive text-center font-medium">{error}</p>
             )}
 
             <Button

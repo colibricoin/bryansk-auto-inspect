@@ -6,75 +6,65 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+async function makeToken(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(password),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode("admin-session"));
+  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { action, login, password, token } = await req.json();
+    const { action, login, password, token, email } = await req.json();
+
+    const adminPassword = Deno.env.get("ADMIN_PASSWORD") || "admin123";
+    const adminEmailsRaw = Deno.env.get("ADMIN_EMAILS") || "";
+    const allowedEmails = adminEmailsRaw
+      .split(",")
+      .map((e: string) => e.trim().toLowerCase())
+      .filter(Boolean);
 
     if (action === "login") {
-      const adminPassword = Deno.env.get("ADMIN_PASSWORD") || "admin123";
-      const usingDefault = !Deno.env.get("ADMIN_PASSWORD");
+      const inputEmail = (email || login || "").trim().toLowerCase();
 
-      if (login !== "admin" || password !== adminPassword) {
+      // Check email is in allowed list
+      if (allowedEmails.length > 0 && !allowedEmails.includes(inputEmail)) {
         return new Response(
-          JSON.stringify({ error: "Неверный логин или пароль" }),
+          JSON.stringify({ error: "Доступ запрещён" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      // Check password
+      if (password !== adminPassword) {
+        return new Response(
+          JSON.stringify({ error: "Неверный пароль" }),
           { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      // Generate a simple session token
-      const sessionToken = crypto.randomUUID() + "-" + crypto.randomUUID();
-      
-      // Store token in a simple KV-like approach using Supabase
-      const supabase = createClient(
-        Deno.env.get("SUPABASE_URL")!,
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-      );
-
-      // We'll use a simple approach: store session in memory isn't persistent,
-      // so we'll encode the token with a signature
-      const encoder = new TextEncoder();
-      const key = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(adminPassword),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["sign"]
-      );
-      const signature = await crypto.subtle.sign(
-        "HMAC",
-        key,
-        encoder.encode("admin-session")
-      );
-      const signedToken = btoa(String.fromCharCode(...new Uint8Array(signature)));
+      const signedToken = await makeToken(adminPassword);
+      const usingDefault = !Deno.env.get("ADMIN_PASSWORD");
 
       return new Response(
-        JSON.stringify({ token: signedToken, usingDefault }),
+        JSON.stringify({ token: signedToken, usingDefault, email: inputEmail }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     if (action === "verify") {
-      const adminPassword = Deno.env.get("ADMIN_PASSWORD") || "admin123";
+      const expectedToken = await makeToken(adminPassword);
       const usingDefault = !Deno.env.get("ADMIN_PASSWORD");
-
-      const encoder = new TextEncoder();
-      const key = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(adminPassword),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["sign"]
-      );
-      const signature = await crypto.subtle.sign(
-        "HMAC",
-        key,
-        encoder.encode("admin-session")
-      );
-      const expectedToken = btoa(String.fromCharCode(...new Uint8Array(signature)));
 
       if (token !== expectedToken) {
         return new Response(
