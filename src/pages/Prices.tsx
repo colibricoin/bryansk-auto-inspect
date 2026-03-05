@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import { ChevronRight, Download, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PRICES, PRICE_SOURCE } from "@/data/prices";
-import BookingForm from "@/components/home/BookingForm";
+import { usePrices, PRICE_SOURCE } from "@/hooks/usePrices";
 
 const FILTERS = [
   { label: "Все", value: "all" },
@@ -17,16 +16,17 @@ const FILTERS = [
 ];
 
 export default function Prices() {
+  const { prices, loading } = usePrices();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const filtered = PRICES.filter((p) => {
-    const matchCat = filter === "all" || p.category === filter;
+  const filtered = prices.filter((p) => {
+    const matchCat = filter === "all" || p.category_name === filter;
     const matchSearch =
       !search ||
       p.description.toLowerCase().includes(search.toLowerCase()) ||
-      p.code.toLowerCase().includes(search.toLowerCase()) ||
-      p.category.toLowerCase().includes(search.toLowerCase()) ||
+      p.category_code.toLowerCase().includes(search.toLowerCase()) ||
+      p.category_name.toLowerCase().includes(search.toLowerCase()) ||
       p.details.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
@@ -77,40 +77,43 @@ export default function Prices() {
             </div>
           </div>
 
-          {/* Full price table */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-card border rounded-xl overflow-hidden mb-8"
-          >
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b bg-muted/50">
-                    <th className="text-left py-3 px-4 font-semibold">Категория</th>
-                    <th className="text-left py-3 px-4 font-semibold">Код</th>
-                    <th className="text-left py-3 px-4 font-semibold">Описание</th>
-                    <th className="text-left py-3 px-4 font-semibold hidden md:table-cell">Подробности</th>
-                    <th className="text-right py-3 px-4 font-semibold">Цена</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((item) => (
-                    <tr key={item.code} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                      <td className="py-3 px-4 font-medium">{item.category}</td>
-                      <td className="py-3 px-4 font-mono text-accent font-semibold">{item.code}</td>
-                      <td className="py-3 px-4">{item.description}</td>
-                      <td className="py-3 px-4 text-muted-foreground text-xs hidden md:table-cell">{item.details}</td>
-                      <td className="py-3 px-4 text-right font-bold text-lg whitespace-nowrap">{item.price} ₽</td>
+          {loading ? (
+            <div className="p-12 text-center text-muted-foreground">Загрузка цен...</div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-card border rounded-xl overflow-hidden mb-8"
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/50">
+                      <th className="text-left py-3 px-4 font-semibold">Категория</th>
+                      <th className="text-left py-3 px-4 font-semibold">Код</th>
+                      <th className="text-left py-3 px-4 font-semibold">Описание</th>
+                      <th className="text-left py-3 px-4 font-semibold hidden md:table-cell">Подробности</th>
+                      <th className="text-right py-3 px-4 font-semibold">Цена</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {filtered.length === 0 && (
-              <div className="p-8 text-center text-muted-foreground">Ничего не найдено</div>
-            )}
-          </motion.div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((item) => (
+                      <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                        <td className="py-3 px-4 font-medium">{item.category_name}</td>
+                        <td className="py-3 px-4 font-mono text-accent font-semibold">{item.category_code}</td>
+                        <td className="py-3 px-4">{item.description}</td>
+                        <td className="py-3 px-4 text-muted-foreground text-xs hidden md:table-cell">{item.details}</td>
+                        <td className="py-3 px-4 text-right font-bold text-lg whitespace-nowrap">{item.price_rub} ₽</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {filtered.length === 0 && (
+                <div className="p-8 text-center text-muted-foreground">Ничего не найдено</div>
+              )}
+            </motion.div>
+          )}
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 mb-8">
             <a
@@ -125,7 +128,6 @@ export default function Prices() {
             </a>
           </div>
 
-          {/* For legal entities */}
           <div className="bg-card border rounded-xl p-6 md:p-8">
             <h2 className="text-xl font-bold mb-4">Для юридических лиц</h2>
             <p className="text-muted-foreground mb-4">

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PRICES, PRICE_SOURCE } from "@/data/prices";
+import { usePrices, PRICE_SOURCE } from "@/hooks/usePrices";
 
 const FILTER_GROUPS = [
   { label: "Все", value: "all" },
@@ -15,8 +15,9 @@ const FILTER_GROUPS = [
 ];
 
 export default function PricesPreview() {
+  const { prices, loading } = usePrices();
   const [filter, setFilter] = useState("all");
-  const filtered = filter === "all" ? PRICES : PRICES.filter((p) => p.category === filter);
+  const filtered = filter === "all" ? prices : prices.filter((p) => p.category_name === filter);
 
   return (
     <section id="prices" className="section-padding bg-background">
@@ -29,7 +30,6 @@ export default function PricesPreview() {
           </p>
         </div>
 
-        {/* Filters */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           {FILTER_GROUPS.map((g) => (
             <button
@@ -46,38 +46,40 @@ export default function PricesPreview() {
           ))}
         </div>
 
-        {/* Table */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="bg-card border rounded-xl overflow-hidden"
-        >
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="text-left py-3 px-4 font-semibold">Категория</th>
-                  <th className="text-left py-3 px-4 font-semibold">Код</th>
-                  <th className="text-left py-3 px-4 font-semibold hidden sm:table-cell">Описание</th>
-                  <th className="text-right py-3 px-4 font-semibold">Цена</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((item) => (
-                  <tr key={item.code} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                    <td className="py-3 px-4">{item.category}</td>
-                    <td className="py-3 px-4 font-mono text-accent font-semibold">{item.code}</td>
-                    <td className="py-3 px-4 text-muted-foreground hidden sm:table-cell">{item.description}</td>
-                    <td className="py-3 px-4 text-right font-bold whitespace-nowrap">{item.price} ₽</td>
+        {loading ? (
+          <div className="p-12 text-center text-muted-foreground">Загрузка...</div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="bg-card border rounded-xl overflow-hidden"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/50">
+                    <th className="text-left py-3 px-4 font-semibold">Категория</th>
+                    <th className="text-left py-3 px-4 font-semibold">Код</th>
+                    <th className="text-left py-3 px-4 font-semibold hidden sm:table-cell">Описание</th>
+                    <th className="text-right py-3 px-4 font-semibold">Цена</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
+                </thead>
+                <tbody>
+                  {filtered.map((item) => (
+                    <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                      <td className="py-3 px-4">{item.category_name}</td>
+                      <td className="py-3 px-4 font-mono text-accent font-semibold">{item.category_code}</td>
+                      <td className="py-3 px-4 text-muted-foreground hidden sm:table-cell">{item.description}</td>
+                      <td className="py-3 px-4 text-right font-bold whitespace-nowrap">{item.price_rub} ₽</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        )}
 
-        {/* Actions */}
         <div className="flex flex-col sm:flex-row justify-center gap-3 mt-6">
           <Link to="/prices">
             <Button variant="outline" className="font-semibold w-full sm:w-auto">
