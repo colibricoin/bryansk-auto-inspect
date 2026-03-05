@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const NAV = [
   { label: "Дашборд", path: "/admin", icon: LayoutDashboard },
   { label: "Заявки", path: "/admin/requests", icon: List },
+  { label: "Цены", path: "/admin/prices", icon: DollarSign },
   { label: "Настройки", path: "/admin/settings", icon: Settings },
 ];
 
