@@ -16,7 +16,7 @@ export function setAdminToken(token: string) {
 }
 
 export function setAdminEmail(email: string) {
-  localStorage.setItem(EMAIL_KEY, email);
+  localStorage.setItem(EMAIL_KEY, email.trim().toLowerCase());
 }
 
 export function clearAdminToken() {
@@ -25,23 +25,25 @@ export function clearAdminToken() {
 }
 
 export async function adminLogin(email: string, password: string) {
+  const normalizedEmail = email.trim().toLowerCase();
   const { data, error } = await supabase.functions.invoke("admin-auth", {
-    body: { action: "login", email, password },
+    body: { action: "login", email: normalizedEmail, password },
   });
   if (error) throw new Error("Ошибка сервера");
   if (data.error) throw new Error(data.error);
   setAdminToken(data.token);
-  setAdminEmail(data.email || email);
+  setAdminEmail(data.email || normalizedEmail);
   return { usingDefault: data.usingDefault };
 }
 
 export async function verifyAdminSession(): Promise<{ valid: boolean; usingDefault: boolean }> {
   const token = getAdminToken();
-  if (!token) return { valid: false, usingDefault: false };
+  const email = getAdminEmail();
+  if (!token || !email) return { valid: false, usingDefault: false };
 
   try {
     const { data, error } = await supabase.functions.invoke("admin-auth", {
-      body: { action: "verify", token },
+      body: { action: "verify", token, email },
     });
     if (error || data.error) return { valid: false, usingDefault: false };
     return { valid: true, usingDefault: data.usingDefault };
@@ -52,10 +54,11 @@ export async function verifyAdminSession(): Promise<{ valid: boolean; usingDefau
 
 export async function adminApi(action: string, params: Record<string, unknown> = {}) {
   const token = getAdminToken();
-  if (!token) throw new Error("Not authenticated");
+  const email = getAdminEmail();
+  if (!token || !email) throw new Error("Not authenticated");
 
   const { data, error } = await supabase.functions.invoke("admin-bookings", {
-    body: { action, token, ...params },
+    body: { action, token, email, ...params },
   });
   if (error) throw new Error("Ошибка сервера");
   if (data.error) throw new Error(data.error);
@@ -65,7 +68,7 @@ export async function adminApi(action: string, params: Record<string, unknown> =
 export async function adminPricesApi(action: string, params: Record<string, unknown> = {}) {
   const token = getAdminToken();
   const email = getAdminEmail();
-  if (!token) throw new Error("Not authenticated");
+  if (!token || !email) throw new Error("Not authenticated");
 
   const { data, error } = await supabase.functions.invoke("admin-prices", {
     body: { action, token, email, ...params },

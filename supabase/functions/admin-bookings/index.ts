@@ -6,8 +6,25 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-async function verifyAdmin(token: string): Promise<boolean> {
-  const adminPassword = Deno.env.get("ADMIN_PASSWORD") || "admin123";
+const ALLOWED_ADMIN_EMAILS = new Set([
+  "suvorovalud@yandex.ru",
+  "info@tyumen.info",
+]);
+
+function normalizeEmail(email: unknown): string {
+  return typeof email === "string" ? email.trim().toLowerCase() : "";
+}
+
+function getAdminPassword(): string {
+  const password = Deno.env.get("ADMIN_PASSWORD");
+  if (!password) throw new Error("ADMIN_PASSWORD is not configured");
+  return password;
+}
+
+async function verifyAdmin(token: string, email: string): Promise<boolean> {
+  if (!ALLOWED_ADMIN_EMAILS.has(email)) return false;
+
+  const adminPassword = getAdminPassword();
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",
@@ -16,7 +33,8 @@ async function verifyAdmin(token: string): Promise<boolean> {
     false,
     ["sign"]
   );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode("admin-session"));
+  const payload = `admin-session:${email}`;
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
   const expectedToken = btoa(String.fromCharCode(...new Uint8Array(signature)));
   return token === expectedToken;
 }
@@ -27,9 +45,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { action, token, id, status, admin_note, filters } = await req.json();
+    const { action, token, id, status, admin_note, filters, email } = await req.json();
+    const normalizedEmail = normalizeEmail(email);
 
-    if (!token || !(await verifyAdmin(token))) {
+    if (!token || !(await verifyAdmin(token, normalizedEmail))) {
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }

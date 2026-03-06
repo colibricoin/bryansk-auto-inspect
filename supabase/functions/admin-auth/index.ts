@@ -6,7 +6,28 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-async function makeToken(password: string): Promise<string> {
+const ALLOWED_ADMIN_EMAILS = new Set([
+  "suvorovalud@yandex.ru",
+  "info@tyumen.info",
+]);
+
+function normalizeEmail(email: unknown): string {
+  return typeof email === "string" ? email.trim().toLowerCase() : "";
+}
+
+function isAllowedAdminEmail(email: string): boolean {
+  return ALLOWED_ADMIN_EMAILS.has(email);
+}
+
+function getAdminPassword(): string {
+  const password = Deno.env.get("ADMIN_PASSWORD");
+  if (!password) {
+    throw new Error("ADMIN_PASSWORD is not configured");
+  }
+  return password;
+}
+
+async function makeToken(password: string, email: string): Promise<string> {
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",
@@ -15,7 +36,8 @@ async function makeToken(password: string): Promise<string> {
     false,
     ["sign"]
   );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode("admin-session"));
+  const payload = `admin-session:${email}`;
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
 }
 
@@ -26,26 +48,18 @@ Deno.serve(async (req) => {
 
   try {
     const { action, login, password, token, email } = await req.json();
-
-    const adminPassword = Deno.env.get("ADMIN_PASSWORD") || "admin123";
-    const adminEmailsRaw = Deno.env.get("ADMIN_EMAILS") || "";
-    const allowedEmails = adminEmailsRaw
-      .split(",")
-      .map((e: string) => e.trim().toLowerCase())
-      .filter(Boolean);
+    const adminPassword = getAdminPassword();
 
     if (action === "login") {
-      const inputEmail = (email || login || "").trim().toLowerCase();
+      const inputEmail = normalizeEmail(email || login);
 
-      // Check email is in allowed list
-      if (allowedEmails.length > 0 && !allowedEmails.includes(inputEmail)) {
+      if (!isAllowedAdminEmail(inputEmail)) {
         return new Response(
           JSON.stringify({ error: "Доступ запрещён" }),
           { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      // Check password
       if (password !== adminPassword) {
         return new Response(
           JSON.stringify({ error: "Неверный пароль" }),
@@ -53,19 +67,25 @@ Deno.serve(async (req) => {
         );
       }
 
-      const signedToken = await makeToken(adminPassword);
-      const usingDefault = !Deno.env.get("ADMIN_PASSWORD");
+      const signedToken = await makeToken(adminPassword, inputEmail);
 
       return new Response(
-        JSON.stringify({ token: signedToken, usingDefault, email: inputEmail }),
+        JSON.stringify({ token: signedToken, usingDefault: false, email: inputEmail }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     if (action === "verify") {
-      const expectedToken = await makeToken(adminPassword);
-      const usingDefault = !Deno.env.get("ADMIN_PASSWORD");
+      const inputEmail = normalizeEmail(email);
 
+      if (!isAllowedAdminEmail(inputEmail)) {
+        return new Response(
+          JSON.stringify({ error: "Доступ запрещён" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const expectedToken = await makeToken(adminPassword, inputEmail);
       if (token !== expectedToken) {
         return new Response(
           JSON.stringify({ error: "Invalid session" }),
@@ -74,7 +94,7 @@ Deno.serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ valid: true, usingDefault }),
+        JSON.stringify({ valid: true, usingDefault: false }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -85,7 +105,7 @@ Deno.serve(async (req) => {
     );
   } catch (e) {
     return new Response(
-      JSON.stringify({ error: e.message }),
+      JSON.stringify({ error: e.message || "Server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
