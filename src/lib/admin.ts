@@ -65,6 +65,19 @@ export async function adminApi(action: string, params: Record<string, unknown> =
   return data.data;
 }
 
+export async function adminEmailsApi(action: string, params: Record<string, unknown> = {}) {
+  const token = getAdminToken();
+  const email = getAdminEmail();
+  if (!token || !email) throw new Error("Not authenticated");
+
+  const { data, error } = await supabase.functions.invoke("admin-emails", {
+    body: { action, token, email, ...params },
+  });
+  if (error) throw new Error("Ошибка сервера");
+  if (data.error) throw new Error(data.error);
+  return data.data;
+}
+
 export async function adminPricesApi(action: string, params: Record<string, unknown> = {}) {
   const token = getAdminToken();
   const email = getAdminEmail();
