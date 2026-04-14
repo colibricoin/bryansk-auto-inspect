@@ -8,6 +8,7 @@ import BookingForm from "@/components/home/BookingForm";
 import ReviewsSection from "@/components/home/ReviewsSection";
 import FAQSection from "@/components/home/FAQSection";
 import ContactsSection from "@/components/home/ContactsSection";
+import SeoTextSection from "@/components/home/SeoTextSection";
 
 export default function Index() {
   return (
@@ -21,6 +22,7 @@ export default function Index() {
       <BookingForm />
       <ReviewsSection />
       <FAQSection />
+      <SeoTextSection />
       <ContactsSection />
     </>
   );
