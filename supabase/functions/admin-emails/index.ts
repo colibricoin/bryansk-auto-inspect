@@ -38,11 +38,11 @@ async function verifyAdmin(token: string, email: string): Promise<boolean> {
   return token === expectedToken;
 }
 
-async function listPrices(supabase: any) {
+async function listEmails(supabase: any) {
   const { data, error } = await supabase
-    .from("prices")
+    .from("notification_emails")
     .select("*")
-    .order("category_code");
+    .order("created_at");
   if (error) throw error;
   return data;
 }
@@ -70,41 +70,7 @@ Deno.serve(async (req) => {
     );
 
     if (action === "list") {
-      const data = await listPrices(supabase);
-      return new Response(
-        JSON.stringify({ data }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    if (action === "update") {
-      const { updates } = body;
-      if (!Array.isArray(updates) || updates.length === 0) {
-        return new Response(
-          JSON.stringify({ error: "No updates provided" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
-      for (const u of updates) {
-        if (typeof u.price_rub !== "number" || u.price_rub < 0) {
-          return new Response(
-            JSON.stringify({ error: `Invalid price for ${u.id}` }),
-            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-          );
-        }
-        const { error } = await supabase
-          .from("prices")
-          .update({
-            price_rub: u.price_rub,
-            updated_at: new Date().toISOString(),
-            updated_by: normalizedEmail,
-          })
-          .eq("id", u.id);
-        if (error) throw error;
-      }
-
-      const data = await listPrices(supabase);
+      const data = await listEmails(supabase);
       return new Response(
         JSON.stringify({ data }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -112,32 +78,40 @@ Deno.serve(async (req) => {
     }
 
     if (action === "add") {
-      const { category_code, category_name, description, details, price_rub } = body;
-      if (!category_code || !category_name) {
+      const addEmail = normalizeEmail(body.addEmail);
+      if (!addEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addEmail)) {
         return new Response(
-          JSON.stringify({ error: "category_code и category_name обязательны" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-      if (typeof price_rub !== "number" || price_rub < 0) {
-        return new Response(
-          JSON.stringify({ error: "Некорректная цена" }),
+          JSON.stringify({ error: "Некорректный email" }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       const { error } = await supabase
-        .from("prices")
-        .insert({
-          category_code,
-          category_name,
-          description: description || "",
-          details: details || "",
-          price_rub,
-          updated_by: normalizedEmail,
-        });
-      if (error) throw error;
+        .from("notification_emails")
+        .insert({ email: addEmail });
+      if (error) {
+        if (error.code === "23505") {
+          return new Response(
+            JSON.stringify({ error: "Этот email уже добавлен" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        throw error;
+      }
+      const data = await listEmails(supabase);
+      return new Response(
+        JSON.stringify({ data }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-      const data = await listPrices(supabase);
+    if (action === "toggle") {
+      const { toggleId, is_active } = body;
+      const { error } = await supabase
+        .from("notification_emails")
+        .update({ is_active })
+        .eq("id", toggleId);
+      if (error) throw error;
+      const data = await listEmails(supabase);
       return new Response(
         JSON.stringify({ data }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -146,19 +120,12 @@ Deno.serve(async (req) => {
 
     if (action === "delete") {
       const { deleteId } = body;
-      if (!deleteId) {
-        return new Response(
-          JSON.stringify({ error: "deleteId required" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
       const { error } = await supabase
-        .from("prices")
+        .from("notification_emails")
         .delete()
         .eq("id", deleteId);
       if (error) throw error;
-
-      const data = await listPrices(supabase);
+      const data = await listEmails(supabase);
       return new Response(
         JSON.stringify({ data }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }

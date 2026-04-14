@@ -1,13 +1,10 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
-
-const RECIPIENTS = [
-  "suvorovalud@yandex.ru",
-  "saleber@yandex.ru",
-];
 
 interface RequestData {
   source_form: string;
@@ -80,8 +77,34 @@ Deno.serve(async (req) => {
     }
 
     const data: RequestData = await req.json();
-
     const html = buildEmailHtml(data);
+
+    // Fetch active recipients from notification_emails
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const { data: emailRows, error: emailError } = await supabase
+      .from("notification_emails")
+      .select("email")
+      .eq("is_active", true);
+
+    if (emailError) {
+      console.error("Failed to fetch notification emails:", emailError);
+    }
+
+    const recipients = emailRows && emailRows.length > 0
+      ? emailRows.map((r: any) => r.email)
+      : [];
+
+    if (recipients.length === 0) {
+      console.error("No active notification emails found. Skipping send.");
+      return new Response(
+        JSON.stringify({ success: false, error: "No active recipients" }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -91,7 +114,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: "Техосмотр Брянск <onboarding@resend.dev>",
-        to: RECIPIENTS,
+        to: recipients,
         subject: "Новая заявка — Техосмотр Брянск",
         html,
       }),

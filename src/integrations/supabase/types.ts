@@ -56,6 +56,27 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_emails: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_active?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
       prices: {
         Row: {
           category_code: string

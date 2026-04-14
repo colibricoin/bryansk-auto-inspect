@@ -4,7 +4,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Save, Search, RotateCcw } from "lucide-react";
+import { Save, Search, RotateCcw, Plus, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface PriceRow {
   id: string;
@@ -24,6 +40,18 @@ export default function AdminPrices() {
   const [search, setSearch] = useState("");
   const [edits, setEdits] = useState<Record<string, number>>({});
   const [saving, setSaving] = useState(false);
+
+  // Add category dialog
+  const [showAdd, setShowAdd] = useState(false);
+  const [newCode, setNewCode] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const [newDetails, setNewDetails] = useState("");
+  const [newPrice, setNewPrice] = useState("");
+  const [addingCategory, setAddingCategory] = useState(false);
+
+  // Delete confirmation
+  const [deleteTarget, setDeleteTarget] = useState<PriceRow | null>(null);
 
   const fetchPrices = async () => {
     setLoading(true);
@@ -96,6 +124,53 @@ export default function AdminPrices() {
     }
   };
 
+  const handleAddCategory = async () => {
+    if (!newCode.trim() || !newName.trim()) {
+      toast({ title: "Укажите код и название категории", variant: "destructive" });
+      return;
+    }
+    const priceNum = parseInt(newPrice, 10);
+    if (isNaN(priceNum) || priceNum < 0) {
+      toast({ title: "Укажите корректную цену", variant: "destructive" });
+      return;
+    }
+    setAddingCategory(true);
+    try {
+      const data = await adminPricesApi("add", {
+        category_code: newCode.trim().toUpperCase(),
+        category_name: newName.trim(),
+        description: newDesc.trim(),
+        details: newDetails.trim(),
+        price_rub: priceNum,
+      });
+      setPrices(data || []);
+      setShowAdd(false);
+      setNewCode("");
+      setNewName("");
+      setNewDesc("");
+      setNewDetails("");
+      setNewPrice("");
+      toast({ title: "Категория добавлена" });
+    } catch (e: any) {
+      toast({ title: e.message || "Ошибка", variant: "destructive" });
+    } finally {
+      setAddingCategory(false);
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    if (!deleteTarget) return;
+    try {
+      const data = await adminPricesApi("delete", { deleteId: deleteTarget.id });
+      setPrices(data || []);
+      toast({ title: "Категория удалена" });
+    } catch (e: any) {
+      toast({ title: e.message || "Ошибка", variant: "destructive" });
+    } finally {
+      setDeleteTarget(null);
+    }
+  };
+
   const resetEdits = () => setEdits({});
 
   return (
@@ -103,6 +178,10 @@ export default function AdminPrices() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
         <h1 className="text-2xl font-bold tracking-tight">Управление ценами</h1>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowAdd(true)}>
+            <Plus className="w-4 h-4 mr-1" />
+            Добавить категорию
+          </Button>
           {hasChanges && (
             <>
               <Button variant="outline" size="sm" onClick={resetEdits}>
@@ -145,7 +224,7 @@ export default function AdminPrices() {
                 <TableHead className="text-base font-semibold w-40">Цена, ₽</TableHead>
                 <TableHead className="text-base font-semibold hidden lg:table-cell">Обновлено</TableHead>
                 <TableHead className="text-base font-semibold hidden lg:table-cell">Кем</TableHead>
-                <TableHead className="w-28"></TableHead>
+                <TableHead className="w-36"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -173,12 +252,22 @@ export default function AdminPrices() {
                       {p.updated_by || "—"}
                     </TableCell>
                     <TableCell>
-                      {isEdited && (
-                        <Button size="sm" onClick={() => handleSaveRow(p.id)} disabled={saving}>
-                          <Save className="w-4 h-4 mr-1" />
-                          Сохранить
+                      <div className="flex gap-1">
+                        {isEdited && (
+                          <Button size="sm" onClick={() => handleSaveRow(p.id)} disabled={saving}>
+                            <Save className="w-4 h-4 mr-1" />
+                            Сохранить
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteTarget(p)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </Button>
-                      )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -187,6 +276,56 @@ export default function AdminPrices() {
           </Table>
         )}
       </div>
+
+      {/* Add category dialog */}
+      <Dialog open={showAdd} onOpenChange={setShowAdd}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Добавить категорию</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Код категории *</label>
+              <Input value={newCode} onChange={(e) => setNewCode(e.target.value)} placeholder="Например: M1" />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Название *</label>
+              <Input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Например: Легковые" />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Описание</label>
+              <Input value={newDesc} onChange={(e) => setNewDesc(e.target.value)} placeholder="Краткое описание" />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Детали</label>
+              <Input value={newDetails} onChange={(e) => setNewDetails(e.target.value)} placeholder="Подробности" />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Цена (₽) *</label>
+              <Input type="number" min={0} value={newPrice} onChange={(e) => setNewPrice(e.target.value)} placeholder="0" />
+            </div>
+            <Button onClick={handleAddCategory} disabled={addingCategory} className="w-full">
+              {addingCategory ? "Добавление..." : "Добавить"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirmation */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Удалить категорию?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Категория <strong>{deleteTarget?.category_code} — {deleteTarget?.category_name}</strong> будет удалена. Это действие необратимо.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteCategory}>Удалить</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

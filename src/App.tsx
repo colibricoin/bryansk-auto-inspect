@@ -21,6 +21,10 @@ import AdminRequests from "./pages/admin/AdminRequests";
 import AdminRequestDetail from "./pages/admin/AdminRequestDetail";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminPrices from "./pages/admin/AdminPrices";
+import AdminEmails from "./pages/admin/AdminEmails";
+import TehosmotrBryansk from "./pages/TehosmotrBryansk";
+import CenyTehosmotra from "./pages/CenyTehosmotra";
+import DiagnosticheskayaKarta from "./pages/DiagnosticheskayaKarta";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +42,7 @@ const App = () => (
             <Route path="requests" element={<AdminRequests />} />
             <Route path="requests/:id" element={<AdminRequestDetail />} />
             <Route path="prices" element={<AdminPrices />} />
+            <Route path="emails" element={<AdminEmails />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
 
@@ -57,6 +62,9 @@ const App = () => (
                     <Route path="/about" element={<About />} />
                     <Route path="/contacts" element={<Contacts />} />
                     <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/tehosmotr-bryansk" element={<TehosmotrBryansk />} />
+                    <Route path="/ceny-tehosmotra-bryansk" element={<CenyTehosmotra />} />
+                    <Route path="/diagnosticheskaya-karta-bryansk" element={<DiagnosticheskayaKarta />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>

@@ -39,9 +39,9 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-6 text-foreground"
           >
-            Официальный техосмотр
+            Техосмотр в Брянске
             <br />
-            <span className="text-accent">в Брянске</span>
+            <span className="text-accent">официальный пункт ТО</span>
             <br />
             <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-muted-foreground">
               Диагностическая карта для ОСАГО

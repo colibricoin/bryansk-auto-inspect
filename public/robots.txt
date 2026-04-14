@@ -4,6 +4,12 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
+User-agent: Yandex
+Allow: /
+
+User-agent: Mail.Ru
+Allow: /
+
 User-agent: Twitterbot
 Allow: /
 
@@ -12,3 +18,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://bryansk-auto-inspect.lovable.app/sitemap.xml
