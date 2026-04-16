@@ -1,0 +1,62 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+export interface SeoLocation {
+  id: string;
+  slug: string;
+  location_name: string;
+  h1: string;
+  seo_title: string;
+  seo_description: string;
+  intro_text: string;
+  seo_text: string;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export function useSeoLocations(activeOnly = true) {
+  const [locations, setLocations] = useState<SeoLocation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const query = supabase
+      .from("seo_locations")
+      .select("*")
+      .order("sort_order");
+
+    if (activeOnly) {
+      query.eq("is_active", true);
+    }
+
+    query.then(({ data, error }) => {
+      if (!error && data) {
+        setLocations(data as SeoLocation[]);
+      }
+      setLoading(false);
+    });
+  }, [activeOnly]);
+
+  return { locations, loading };
+}
+
+export function useSeoLocation(slug: string) {
+  const [location, setLocation] = useState<SeoLocation | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase
+      .from("seo_locations")
+      .select("*")
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setLocation(data as SeoLocation);
+        }
+        setLoading(false);
+      });
+  }, [slug]);
+
+  return { location, loading };
+}

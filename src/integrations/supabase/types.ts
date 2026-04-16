@@ -155,6 +155,51 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_locations: {
+        Row: {
+          created_at: string
+          h1: string
+          id: string
+          intro_text: string
+          is_active: boolean
+          location_name: string
+          seo_description: string
+          seo_text: string
+          seo_title: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          h1: string
+          id?: string
+          intro_text?: string
+          is_active?: boolean
+          location_name: string
+          seo_description: string
+          seo_text?: string
+          seo_title: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          h1?: string
+          id?: string
+          intro_text?: string
+          is_active?: boolean
+          location_name?: string
+          seo_description?: string
+          seo_text?: string
+          seo_title?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

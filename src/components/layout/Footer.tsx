@@ -2,11 +2,21 @@ import { Link } from "react-router-dom";
 import { Phone, MapPin, Clock, FileText, ExternalLink } from "lucide-react";
 import { COMPANY } from "@/data/company";
 
+const DISTRICT_LINKS = [
+  { label: "Бежицкий район", path: "/tehosmotr-bezhickiy-rayon" },
+  { label: "Володарский район", path: "/tehosmotr-volodarskiy-rayon" },
+  { label: "Советский район", path: "/tehosmotr-sovetskiy-rayon" },
+  { label: "Фокинский район", path: "/tehosmotr-fokinskiy-rayon" },
+  { label: "Большое Полпино", path: "/tehosmotr-bolshoe-polpino" },
+  { label: "Пункт техосмотра", path: "/punkt-tehosmotra-bryansk" },
+  { label: "Техосмотр для ОСАГО", path: "/tehosmotr-dlya-osago-bryansk" },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-surface-dark text-sm">
       <div className="container-narrow section-padding pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -40,14 +50,25 @@ export default function Footer() {
                 { label: "О компании", path: "/about" },
                 { label: "Контакты", path: "/contacts" },
               ].map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="text-muted-foreground hover:text-accent transition-colors"
-                >
+                <Link key={item.path} to={item.path} className="text-muted-foreground hover:text-accent transition-colors">
                   {item.label}
                 </Link>
               ))}
+            </nav>
+          </div>
+
+          {/* Districts */}
+          <div>
+            <h4 className="font-semibold mb-4" style={{ color: "hsl(0 0% 95%)" }}>Районы Брянска</h4>
+            <nav className="flex flex-col gap-2">
+              {DISTRICT_LINKS.map((item) => (
+                <Link key={item.path} to={item.path} className="text-muted-foreground hover:text-accent transition-colors">
+                  {item.label}
+                </Link>
+              ))}
+              <Link to="/rayony-bryanska" className="text-accent hover:text-accent/80 transition-colors font-medium mt-1">
+                Все районы →
+              </Link>
             </nav>
           </div>
 
@@ -83,13 +104,7 @@ export default function Footer() {
             <h4 className="font-semibold mb-4" style={{ color: "hsl(0 0% 95%)" }}>Документы</h4>
             <div className="flex flex-col gap-2">
               {COMPANY.documents.map((doc) => (
-                <a
-                  key={doc.shortTitle}
-                  href={doc.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
-                >
+                <a key={doc.shortTitle} href={doc.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors">
                   <FileText className="w-4 h-4 shrink-0" />
                   {doc.shortTitle}
                 </a>

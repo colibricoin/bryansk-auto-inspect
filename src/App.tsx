@@ -22,11 +22,24 @@ import AdminRequestDetail from "./pages/admin/AdminRequestDetail";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminPrices from "./pages/admin/AdminPrices";
 import AdminEmails from "./pages/admin/AdminEmails";
+import AdminSeoLocations from "./pages/admin/AdminSeoLocations";
 import TehosmotrBryansk from "./pages/TehosmotrBryansk";
 import CenyTehosmotra from "./pages/CenyTehosmotra";
 import DiagnosticheskayaKarta from "./pages/DiagnosticheskayaKarta";
+import SeoLocationPage from "./pages/SeoLocationPage";
+import DistrictsPage from "./pages/DistrictsPage";
 
 const queryClient = new QueryClient();
+
+const SEO_SLUGS = [
+  "tehosmotr-bezhickiy-rayon",
+  "tehosmotr-volodarskiy-rayon",
+  "tehosmotr-sovetskiy-rayon",
+  "tehosmotr-fokinskiy-rayon",
+  "tehosmotr-bolshoe-polpino",
+  "punkt-tehosmotra-bryansk",
+  "tehosmotr-dlya-osago-bryansk",
+];
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -35,7 +48,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Admin routes - no Header/Footer */}
+          {/* Admin routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
@@ -43,6 +56,7 @@ const App = () => (
             <Route path="requests/:id" element={<AdminRequestDetail />} />
             <Route path="prices" element={<AdminPrices />} />
             <Route path="emails" element={<AdminEmails />} />
+            <Route path="seo-locations" element={<AdminSeoLocations />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
 
@@ -65,6 +79,9 @@ const App = () => (
                     <Route path="/tehosmotr-bryansk" element={<TehosmotrBryansk />} />
                     <Route path="/ceny-tehosmotra-bryansk" element={<CenyTehosmotra />} />
                     <Route path="/diagnosticheskaya-karta-bryansk" element={<DiagnosticheskayaKarta />} />
+                    <Route path="/rayony-bryanska" element={<DistrictsPage />} />
+                    {/* Dynamic SEO location pages */}
+                    <Route path="/:slug" element={<SeoLocationPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
