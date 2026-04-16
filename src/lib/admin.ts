@@ -91,6 +91,26 @@ export async function adminPricesApi(action: string, params: Record<string, unkn
   return data.data;
 }
 
+export async function adminApiFetch(functionName: string, options: RequestInit = {}): Promise<any> {
+  const token = getAdminToken();
+  const email = getAdminEmail();
+  if (!token || !email) throw new Error("Not authenticated");
+
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${functionName}`;
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-token": token,
+      "x-admin-email": email,
+      ...(options.headers || {}),
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Ошибка сервера");
+  return data;
+}
+
 export const STATUS_LABELS: Record<string, string> = {
   new: "Новая",
   in_progress: "В работе",

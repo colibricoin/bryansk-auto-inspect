@@ -11,6 +11,46 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/rayony-bryanska</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/tehosmotr-bezhickiy-rayon</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/tehosmotr-volodarskiy-rayon</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/tehosmotr-sovetskiy-rayon</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/tehosmotr-fokinskiy-rayon</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/tehosmotr-bolshoe-polpino</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/punkt-tehosmotra-bryansk</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bryansk-auto-inspect.lovable.app/tehosmotr-dlya-osago-bryansk</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://bryansk-auto-inspect.lovable.app/prices</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

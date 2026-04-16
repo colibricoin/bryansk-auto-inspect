@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { verifyAdminSession, clearAdminToken } from "@/lib/admin";
-import { LayoutDashboard, List, Settings, LogOut, AlertTriangle, DollarSign, Mail } from "lucide-react";
+import { LayoutDashboard, List, Settings, LogOut, AlertTriangle, DollarSign, Mail, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NAV = [
@@ -9,6 +9,7 @@ const NAV = [
   { label: "Заявки", path: "/admin/requests", icon: List },
   { label: "Цены", path: "/admin/prices", icon: DollarSign },
   { label: "Email", path: "/admin/emails", icon: Mail },
+  { label: "SEO", path: "/admin/seo-locations", icon: Globe },
   { label: "Настройки", path: "/admin/settings", icon: Settings },
 ];
 

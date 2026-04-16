@@ -9,6 +9,7 @@ import ReviewsSection from "@/components/home/ReviewsSection";
 import FAQSection from "@/components/home/FAQSection";
 import ContactsSection from "@/components/home/ContactsSection";
 import SeoTextSection from "@/components/home/SeoTextSection";
+import DistrictsSection from "@/components/home/DistrictsSection";
 
 export default function Index() {
   return (
@@ -17,6 +18,7 @@ export default function Index() {
       <TrustSection />
       <CategoriesSection />
       <ProcessSection />
+      <DistrictsSection />
       <ScheduleSection />
       <PricesPreview />
       <BookingForm />
