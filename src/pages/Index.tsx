@@ -1,7 +1,10 @@
 import HeroSection from "@/components/home/HeroSection";
+import StatsSection from "@/components/home/StatsSection";
 import TrustSection from "@/components/home/TrustSection";
+import StationSection from "@/components/home/StationSection";
 import CategoriesSection from "@/components/home/CategoriesSection";
 import ProcessSection from "@/components/home/ProcessSection";
+import HonestTermsSection from "@/components/home/HonestTermsSection";
 import ScheduleSection from "@/components/home/ScheduleSection";
 import PricesPreview from "@/components/home/PricesPreview";
 import BookingForm from "@/components/home/BookingForm";
@@ -15,9 +18,12 @@ export default function Index() {
   return (
     <>
       <HeroSection />
+      <StatsSection />
       <TrustSection />
-      <CategoriesSection />
+      <StationSection />
       <ProcessSection />
+      <HonestTermsSection />
+      <CategoriesSection />
       <DistrictsSection />
       <ScheduleSection />
       <PricesPreview />
