@@ -8,8 +8,8 @@ export default function DiagnosticheskayaKarta() {
   return (
     <>
       <Helmet>
-        <title>Диагностическая карта Брянск — получить для ОСАГО, официально</title>
-        <meta name="description" content="Получите диагностическую карту в Брянске для оформления ОСАГО. Официальный пункт ТО. Данные вносятся в ЕАИСТО. Быстро, от 359 ₽." />
+        <title>Диагностическая карта в Брянске — оформление для ОСАГО</title>
+        <meta name="description" content="Электронная диагностическая карта в Брянске. Регистрация в ЕАИСТО сразу после осмотра. Подходит для оформления ОСАГО в любой страховой." />
         <link rel="canonical" href="https://bryansk-auto-inspect.lovable.app/diagnosticheskaya-karta-bryansk" />
       </Helmet>
 
@@ -18,33 +18,33 @@ export default function DiagnosticheskayaKarta() {
           <nav className="mb-6 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-foreground">Главная</Link>
             <span className="mx-2">/</span>
-            <span className="text-foreground">Диагностическая карта Брянск</span>
+            <span className="text-foreground">Диагностическая карта</span>
           </nav>
 
           <h1 className="text-3xl md:text-4xl font-extrabold mb-6">Диагностическая карта в Брянске</h1>
 
           <div className="grid md:grid-cols-2 gap-8 mb-10">
             <div>
-              <h2 className="text-2xl font-bold mb-4">Что такое диагностическая карта</h2>
+              <h2 className="text-2xl font-bold mb-4">Что это такое</h2>
               <p className="text-muted-foreground text-lg mb-4">
-                Диагностическая карта — это электронный документ, подтверждающий прохождение технического осмотра
-                транспортного средства. Она необходима для оформления полиса ОСАГО и содержит информацию о
-                техническом состоянии автомобиля.
+                Это электронный документ, который подтверждает, что машина прошла технический
+                осмотр и соответствует требованиям безопасности. Без неё страховая не оформит
+                ОСАГО на транспортные средства, для которых техосмотр обязателен.
               </p>
               <p className="text-muted-foreground text-lg">
-                Данные диагностической карты вносятся в единую автоматизированную информационную систему
-                технического осмотра (ЕАИСТО), что гарантирует их подлинность и юридическую силу.
+                Бумажный экземпляр больше не нужен — все данные хранятся в государственной
+                системе ЕАИСТО, и любая страховая видит карту по номеру автомобиля.
               </p>
             </div>
             <div className="bg-card border rounded-xl p-6">
               <FileText className="w-8 h-8 text-accent mb-4" />
-              <h3 className="font-bold text-lg mb-3">Для получения диагностической карты нужно:</h3>
+              <h3 className="font-bold text-lg mb-3">Что взять с собой</h3>
               <ul className="space-y-3">
                 {[
-                  "Паспорт владельца ТС",
-                  "Свидетельство о регистрации ТС (СТС)",
+                  "Паспорт владельца",
+                  "СТС или ПТС",
                   "Водительское удостоверение",
-                  "Транспортное средство в чистом виде",
+                  "Чистую машину — без особой подготовки",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-accent mt-0.5 shrink-0" />
@@ -56,27 +56,27 @@ export default function DiagnosticheskayaKarta() {
           </div>
 
           <div className="prose prose-lg max-w-none text-muted-foreground space-y-4 mb-10">
-            <h2 className="text-foreground">Где получить диагностическую карту в Брянске</h2>
+            <h2 className="text-foreground">Как мы оформляем</h2>
             <p>
-              Пункт техосмотра {COMPANY.legalName} в Брянске выдаёт диагностические карты для всех категорий
-              транспортных средств. Наш пункт техосмотра аккредитован РСА и работает {COMPANY.experience}.
-              Адрес: {COMPANY.address}.
+              Принимаем по записи и без неё. Эксперт проверяет машину по официальному регламенту,
+              после чего карта формируется в электронном виде и сразу регистрируется в ЕАИСТО.
+              На всё уходит около 20–30 минут для легкового автомобиля.
             </p>
             <p>
-              Процедура получения диагностической карты в Брянске занимает от 20 до 40 минут. Записаться можно
-              онлайн или по телефону {COMPANY.phone}. После прохождения техосмотра диагностическая карта
-              формируется автоматически и вносится в ЕАИСТО — вы сразу можете оформлять ОСАГО.
+              Работаем с {COMPANY.experience}, аккредитованы РСА. Адрес — {COMPANY.address}.
+              Если удобнее — звоните по {COMPANY.phone}, подскажем ближайшее свободное время.
             </p>
             <p>
-              Стоимость получения диагностической карты в Брянске зависит от категории ТС и составляет
-              от 359 ₽ до 1 742 ₽. Цены регулируются Постановлением Правительства Брянской области.
+              Стоимость зависит только от категории ТС и едина для всей Брянской области —
+              никаких надбавок «за оформление» или «срочность». После осмотра можно сразу идти
+              в страховую и оформлять полис.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/booking">
               <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent-hover font-bold text-base px-8 h-12">
-                Записаться на техосмотр <ChevronRight className="w-5 h-5 ml-1" />
+                Записаться <ChevronRight className="w-5 h-5 ml-1" />
               </Button>
             </Link>
             <a href={`tel:${COMPANY.phoneRaw}`}>
