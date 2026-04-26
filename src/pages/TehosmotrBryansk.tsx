@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { COMPANY } from "@/data/company";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Phone, MapPin, Clock, Shield } from "lucide-react";
+import DynamicMeta from "@/components/seo/DynamicMeta";
 
 export default function TehosmotrBryansk() {
   return (
     <>
-      <Helmet>
-        <title>Техосмотр Брянск — официальный пункт ТО, диагностическая карта для ОСАГО</title>
-        <meta name="description" content="Аккредитованная станция техосмотра в Брянске. Все категории транспорта, единые цены региона, электронная карта в ЕАИСТО. Запись онлайн или по телефону." />
-        <link rel="canonical" href="https://bryansk-auto-inspect.lovable.app/tehosmotr-bryansk" />
-      </Helmet>
+      <DynamicMeta
+        routePath="/tehosmotr-bryansk"
+        defaultTitle="Техосмотр Брянск — официальный пункт ТО, диагностическая карта для ОСАГО"
+        defaultDescription="Аккредитованная станция техосмотра в Брянске. Все категории транспорта, единые цены региона, электронная карта в ЕАИСТО. Запись онлайн или по телефону."
+        defaultKeywords="техосмотр Брянск, пункт техосмотра Брянск, диагностическая карта Брянск, техосмотр ОСАГО, аккредитованный пункт техосмотра"
+        canonical="https://bryansk-auto-inspect.lovable.app/tehosmotr-bryansk"
+      />
 
       <section className="section-padding bg-background">
         <div className="container-narrow">

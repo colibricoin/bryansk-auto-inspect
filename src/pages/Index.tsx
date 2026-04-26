@@ -13,10 +13,18 @@ import FAQSection from "@/components/home/FAQSection";
 import ContactsSection from "@/components/home/ContactsSection";
 import SeoTextSection from "@/components/home/SeoTextSection";
 import DistrictsSection from "@/components/home/DistrictsSection";
+import DynamicMeta from "@/components/seo/DynamicMeta";
 
 export default function Index() {
   return (
     <>
+      <DynamicMeta
+        routePath="/"
+        defaultTitle="Техосмотр Брянск — Официальный техосмотр для ОСАГО в Брянске"
+        defaultDescription="Пройдите техосмотр в Брянске. Официальное прохождение техосмотра для всех категорий транспорта. Запись онлайн."
+        defaultKeywords="техосмотр Брянск, пройти техосмотр Брянск, диагностическая карта Брянск, техосмотр для ОСАГО, пункт техосмотра Брянск"
+        canonical="https://bryansk-auto-inspect.lovable.app/"
+      />
       <HeroSection />
       <StatsSection />
       <TrustSection />

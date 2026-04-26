@@ -134,7 +134,7 @@ Deno.serve(async (req) => {
       JSON.stringify({ success: true, id: result.id }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error("send-notification error:", e);
     return new Response(
       JSON.stringify({ error: e.message }),

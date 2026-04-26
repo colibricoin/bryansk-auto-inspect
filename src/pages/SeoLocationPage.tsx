@@ -103,10 +103,15 @@ export default function SeoLocationPage() {
       <Helmet>
         <title>{location.seo_title}</title>
         <meta name="description" content={location.seo_description} />
+        {location.keywords && <meta name="keywords" content={location.keywords} />}
         <link rel="canonical" href={`https://bryansk-auto-inspect.lovable.app/${location.slug}`} />
         <meta property="og:title" content={location.seo_title} />
         <meta property="og:description" content={location.seo_description} />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://bryansk-auto-inspect.lovable.app/${location.slug}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={location.seo_title} />
+        <meta name="twitter:description" content={location.seo_description} />
         <script type="application/ld+json">{JSON.stringify(localBusinessSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>

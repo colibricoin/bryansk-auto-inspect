@@ -1,20 +1,22 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { usePrices, PRICE_SOURCE } from "@/hooks/usePrices";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Phone } from "lucide-react";
 import { COMPANY } from "@/data/company";
+import DynamicMeta from "@/components/seo/DynamicMeta";
 
 export default function CenyTehosmotra() {
   const { prices, loading } = usePrices();
 
   return (
     <>
-      <Helmet>
-        <title>Цены на техосмотр в Брянске — прейскурант на 2025 год</title>
-        <meta name="description" content="Актуальные цены на техосмотр в Брянске для всех категорий ТС. Тарифы утверждены регионом и одинаковы для всех аккредитованных пунктов." />
-        <link rel="canonical" href="https://bryansk-auto-inspect.lovable.app/ceny-tehosmotra-bryansk" />
-      </Helmet>
+      <DynamicMeta
+        routePath="/ceny-tehosmotra-bryansk"
+        defaultTitle="Цены на техосмотр в Брянске — прейскурант на 2025 год"
+        defaultDescription="Актуальные цены на техосмотр в Брянске для всех категорий ТС. Тарифы утверждены регионом и одинаковы для всех аккредитованных пунктов."
+        defaultKeywords="цены на техосмотр Брянск, стоимость техосмотра Брянск, прейскурант техосмотра, техосмотр цена"
+        canonical="https://bryansk-auto-inspect.lovable.app/ceny-tehosmotra-bryansk"
+      />
 
       <section className="section-padding bg-background">
         <div className="container-narrow">
