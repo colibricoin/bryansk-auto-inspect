@@ -162,7 +162,10 @@ export type Database = {
           id: string
           intro_text: string
           is_active: boolean
+          keywords: string
           location_name: string
+          page_type: string
+          route_path: string | null
           seo_description: string
           seo_text: string
           seo_title: string
@@ -176,7 +179,10 @@ export type Database = {
           id?: string
           intro_text?: string
           is_active?: boolean
+          keywords?: string
           location_name: string
+          page_type?: string
+          route_path?: string | null
           seo_description: string
           seo_text?: string
           seo_title: string
@@ -190,7 +196,10 @@ export type Database = {
           id?: string
           intro_text?: string
           is_active?: boolean
+          keywords?: string
           location_name?: string
+          page_type?: string
+          route_path?: string | null
           seo_description?: string
           seo_text?: string
           seo_title?: string
