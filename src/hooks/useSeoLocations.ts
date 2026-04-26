@@ -8,6 +8,9 @@ export interface SeoLocation {
   h1: string;
   seo_title: string;
   seo_description: string;
+  keywords?: string;
+  page_type?: string;
+  route_path?: string | null;
   intro_text: string;
   seo_text: string;
   is_active: boolean;
@@ -22,6 +25,7 @@ export function useSeoLocations(activeOnly = true) {
     const query = supabase
       .from("seo_locations")
       .select("*")
+      .eq("page_type", "district")
       .order("sort_order");
 
     if (activeOnly) {
@@ -59,4 +63,35 @@ export function useSeoLocation(slug: string) {
   }, [slug]);
 
   return { location, loading };
+}
+
+/**
+ * Fetch meta-tags for a static route (e.g. "/", "/ceny-tehosmotra-bryansk").
+ * Returns null while loading or if not configured — pages should fall back
+ * to their hardcoded defaults in that case.
+ */
+export function useRouteMeta(routePath: string) {
+  const [meta, setMeta] = useState<SeoLocation | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    supabase
+      .from("seo_locations")
+      .select("*")
+      .eq("route_path", routePath)
+      .eq("is_active", true)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (!error && data) setMeta(data as SeoLocation);
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [routePath]);
+
+  return { meta, loading };
 }
