@@ -11,9 +11,9 @@ export default function FAQSection() {
   return (
     <section className="section-padding bg-background">
       <div className="container-narrow">
-        <div className="text-center mb-12">
-          <div className="accent-line mx-auto mb-4" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">Частые вопросы</h2>
+        <div className="text-center mb-8">
+          <div className="accent-line mx-auto mb-3" />
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Частые вопросы</h2>
         </div>
 
         <motion.div

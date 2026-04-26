@@ -12,9 +12,9 @@ export default function ReviewsSection() {
   return (
     <section className="section-padding bg-background">
       <div className="container-narrow">
-        <div className="text-center mb-10">
-          <div className="accent-line mx-auto mb-4" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">Отзывы клиентов</h2>
+        <div className="text-center mb-8">
+          <div className="accent-line mx-auto mb-3" />
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Отзывы клиентов</h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Мы не публикуем отзывы, которые нельзя проверить. Реальные мнения о нашей работе —
             на Яндекс.Картах и 2ГИС.
