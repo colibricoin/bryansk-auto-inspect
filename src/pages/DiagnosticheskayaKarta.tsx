@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { COMPANY } from "@/data/company";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Phone, FileText, CheckCircle2 } from "lucide-react";
+import DynamicMeta from "@/components/seo/DynamicMeta";
 
 export default function DiagnosticheskayaKarta() {
   return (
     <>
-      <Helmet>
-        <title>Диагностическая карта в Брянске — оформление для ОСАГО</title>
-        <meta name="description" content="Электронная диагностическая карта в Брянске. Регистрация в ЕАИСТО сразу после осмотра. Подходит для оформления ОСАГО в любой страховой." />
-        <link rel="canonical" href="https://bryansk-auto-inspect.lovable.app/diagnosticheskaya-karta-bryansk" />
-      </Helmet>
+      <DynamicMeta
+        routePath="/diagnosticheskaya-karta-bryansk"
+        defaultTitle="Диагностическая карта в Брянске — оформление для ОСАГО"
+        defaultDescription="Электронная диагностическая карта в Брянске. Регистрация в ЕАИСТО сразу после осмотра. Подходит для оформления ОСАГО в любой страховой."
+        defaultKeywords="диагностическая карта Брянск, диагностическая карта для ОСАГО, ЕАИСТО Брянск, оформить диагностическую карту"
+        canonical="https://bryansk-auto-inspect.lovable.app/diagnosticheskaya-karta-bryansk"
+      />
 
       <section className="section-padding bg-background">
         <div className="container-narrow">
