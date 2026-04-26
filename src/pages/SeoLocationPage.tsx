@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import { ChevronRight, Phone, MapPin, Clock, Shield, FileCheck, Car, Bus, Truck, CheckCircle2 } from "lucide-react";
+import { ChevronRight, Phone, MapPin, Clock, Shield, FileCheck, Car, Bus, Truck, CheckCircle2, Banknote, ListChecks, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSeoLocation, useSeoLocations } from "@/hooks/useSeoLocations";
 import { usePrices, PRICE_SOURCE } from "@/hooks/usePrices";
@@ -336,19 +336,105 @@ export default function SeoLocationPage() {
         </div>
       </section>
 
-      {/* Cross-links */}
+      {/* Internal links: useful pages */}
+      <section className="section-padding bg-background border-t">
+        <div className="container-narrow">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Полезные разделы</h2>
+          <p className="text-muted-foreground mb-8">
+            Информация, которая чаще всего нужна перед техосмотром в районе «{location.location_name}».
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <Link
+              to="/ceny-tehosmotra-bryansk"
+              className="group p-6 bg-card border rounded-xl hover:border-accent hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-4">
+                <Banknote className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Цены на техосмотр</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Прейскурант для всех категорий ТС. Тарифы утверждены регионом и одинаковы для всех аккредитованных пунктов.
+              </p>
+              <span className="inline-flex items-center text-sm font-semibold text-accent group-hover:gap-2 gap-1 transition-all">
+                Смотреть прейскурант <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+
+            <Link
+              to="/tehosmotr-bryansk"
+              className="group p-6 bg-card border rounded-xl hover:border-accent hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-4">
+                <ListChecks className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Как пройти техосмотр</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Документы, порядок прохождения, что проверяют на линии и сколько времени это занимает.
+              </p>
+              <span className="inline-flex items-center text-sm font-semibold text-accent group-hover:gap-2 gap-1 transition-all">
+                Подробнее <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+
+            <Link
+              to="/diagnosticheskaya-karta-bryansk"
+              className="group p-6 bg-card border rounded-xl hover:border-accent hover:shadow-md transition-all"
+            >
+              <div className="w-12 h-12 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Диагностическая карта</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Электронная карта в ЕАИСТО для оформления ОСАГО. Готова сразу после прохождения осмотра.
+              </p>
+              <span className="inline-flex items-center text-sm font-semibold text-accent group-hover:gap-2 gap-1 transition-all">
+                Узнать подробнее <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Internal links: nearby districts */}
       <section className="section-padding bg-muted/30">
         <div className="container-narrow">
-          <h2 className="text-xl font-bold mb-6">Техосмотр в других районах Брянска</h2>
-          <div className="flex flex-wrap gap-3">
-            {otherLocations.map((loc) => (
-              <Link key={loc.slug} to={`/${loc.slug}`} className="px-4 py-2 bg-card border rounded-lg text-sm font-medium hover:border-accent transition-colors">
-                {loc.location_name}
-              </Link>
-            ))}
-            <Link to="/prices" className="px-4 py-2 bg-card border rounded-lg text-sm font-medium hover:border-accent transition-colors">Цены</Link>
-            <Link to="/diagnosticheskaya-karta-bryansk" className="px-4 py-2 bg-card border rounded-lg text-sm font-medium hover:border-accent transition-colors">Диагностическая карта</Link>
-            <Link to="/booking" className="px-4 py-2 bg-card border rounded-lg text-sm font-medium hover:border-accent transition-colors">Онлайн-запись</Link>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Техосмотр в других районах Брянска</h2>
+          <p className="text-muted-foreground mb-8">
+            Один и тот же пункт обслуживает все районы города — выберите удобный для подъезда.
+          </p>
+
+          {otherLocations.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {otherLocations.map((loc) => (
+                <Link
+                  key={loc.slug}
+                  to={`/${loc.slug}`}
+                  className="group p-5 bg-card border rounded-xl hover:border-accent hover:shadow-md transition-all flex items-start gap-3"
+                >
+                  <MapPin className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <div className="font-semibold mb-0.5 group-hover:text-accent transition-colors">
+                      Техосмотр {loc.location_name}
+                    </div>
+                    <div className="text-sm text-muted-foreground line-clamp-2">
+                      {loc.intro_text || "Официальный техосмотр и диагностическая карта для ОСАГО."}
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-accent shrink-0 mt-1" />
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/rayony-bryanska">
+              <Button variant="outline">Все районы Брянска →</Button>
+            </Link>
+            <Link to="/booking">
+              <Button className="bg-accent text-accent-foreground hover:bg-accent-hover">
+                Записаться онлайн
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
