@@ -50,9 +50,9 @@ export default function CategoriesSection() {
   return (
     <section className="section-padding bg-muted/40">
       <div className="container-narrow">
-        <div className="text-center mb-12">
-          <div className="accent-line mx-auto mb-4" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">
+        <div className="text-center mb-8">
+          <div className="accent-line mx-auto mb-3" />
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">
             Категории ТС, которые мы обслуживаем
           </h2>
           <p className="text-muted-foreground max-w-lg mx-auto">
@@ -60,7 +60,7 @@ export default function CategoriesSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {CATEGORIES.map((cat, i) => (
             <motion.div
               key={cat.anchor}
@@ -71,19 +71,19 @@ export default function CategoriesSection() {
             >
               <Link
                 to={`/services#${cat.anchor}`}
-                className="card-premium flex flex-col p-5 group h-full"
+                className="card-premium flex flex-col p-4 group h-full"
               >
                 <img
                   src={cat.image}
                   alt={cat.title}
-                  className="w-full h-40 object-contain drop-shadow-lg mb-5 group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-28 object-contain drop-shadow-lg mb-3 group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-semibold text-foreground">{cat.title}</h3>
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
                 </div>
-                <div className="text-xs font-mono text-accent mb-2">{cat.codes}</div>
+                <div className="text-xs font-mono text-accent mb-1">{cat.codes}</div>
                 <p className="text-sm text-muted-foreground">{cat.description}</p>
               </Link>
             </motion.div>

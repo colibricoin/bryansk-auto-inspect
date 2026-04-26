@@ -19,12 +19,12 @@ export default function StatsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="bg-card p-6 lg:p-8"
+              className="bg-card p-4 lg:p-6"
             >
-              <div className="text-4xl lg:text-5xl font-extrabold text-foreground mb-2 tracking-tight">
+              <div className="text-3xl lg:text-4xl font-extrabold text-foreground mb-1 tracking-tight">
                 {s.value}
               </div>
-              <div className="font-semibold text-foreground mb-1">{s.label}</div>
+              <div className="font-semibold text-foreground mb-0.5">{s.label}</div>
               <div className="text-sm text-muted-foreground">{s.sub}</div>
             </motion.div>
           ))}

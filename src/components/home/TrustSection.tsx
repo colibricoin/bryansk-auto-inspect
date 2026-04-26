@@ -44,15 +44,15 @@ export default function TrustSection() {
   return (
     <section className="section-padding bg-background">
       <div className="container-narrow">
-        <div className="text-center mb-12">
-          <div className="accent-line mx-auto mb-4" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">Почему нам доверяют</h2>
+        <div className="text-center mb-8">
+          <div className="accent-line mx-auto mb-3" />
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">Почему нам доверяют</h2>
           <p className="text-muted-foreground max-w-lg mx-auto">
             Более 8 лет безупречной работы. Официальный техосмотр с гарантией качества.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {TRUST_ITEMS.map((item, i) => (
             <motion.div
               key={item.title}
@@ -60,15 +60,15 @@ export default function TrustSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="card-premium p-6"
+              className="card-premium p-5"
             >
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-24 h-24 object-contain drop-shadow-md mb-6"
+                className="w-16 h-16 object-contain drop-shadow-md mb-3"
                 loading="lazy"
               />
-              <h3 className="font-semibold mb-2 text-foreground">{item.title}</h3>
+              <h3 className="font-semibold mb-1 text-foreground">{item.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
             </motion.div>
           ))}
