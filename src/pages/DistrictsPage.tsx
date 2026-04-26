@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSeoLocations } from "@/hooks/useSeoLocations";
 import { COMPANY } from "@/data/company";
+import DynamicMeta from "@/components/seo/DynamicMeta";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -18,11 +18,13 @@ export default function DistrictsPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Техосмотр по районам Брянска — все районы и локации</title>
-        <meta name="description" content="Пункт техосмотра в Брянске обслуживает все районы: Бежицкий, Володарский, Советский, Фокинский, Большое Полпино. Запись онлайн." />
-        <link rel="canonical" href="https://bryansk-auto-inspect.lovable.app/rayony-bryanska" />
-      </Helmet>
+      <DynamicMeta
+        routePath="/rayony-bryanska"
+        defaultTitle="Техосмотр по районам Брянска — все районы и локации"
+        defaultDescription="Пункт техосмотра в Брянске обслуживает все районы: Бежицкий, Володарский, Советский, Фокинский, Большое Полпино. Запись онлайн."
+        defaultKeywords="техосмотр районы Брянска, техосмотр Бежицкий район, техосмотр Советский район, техосмотр Володарский район, техосмотр Фокинский район"
+        canonical="https://bryansk-auto-inspect.lovable.app/rayony-bryanska"
+      />
 
       <div className="bg-muted/50 border-b">
         <div className="container-narrow py-3">
