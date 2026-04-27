@@ -10,7 +10,7 @@ const GIS2_LINK = "https://2gis.ru/bryansk/search/Техосмотр%20Боль�
 
 export default function ReviewsSection() {
   return (
-    <section className="section-padding bg-background">
+    <section id="reviews" className="section-padding bg-background scroll-mt-20">
       <div className="container-narrow">
         <div className="text-center mb-8">
           <div className="accent-line mx-auto mb-3" />
