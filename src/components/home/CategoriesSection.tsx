@@ -68,17 +68,25 @@ export default function CategoriesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
+              whileHover={{ y: -4, scale: 1.02 }}
             >
               <Link
                 to={`/services#${cat.anchor}`}
-                className="card-premium flex flex-col p-4 group h-full"
+                className="bg-card rounded-[10px] border border-border/60 shadow-[0_2px_10px_-2px_hsl(var(--foreground)/0.08)] hover:shadow-[0_18px_40px_-12px_hsl(var(--accent)/0.2)] transition-shadow flex flex-col p-5 group h-full"
               >
-                <img
-                  src={cat.image}
-                  alt={cat.title}
-                  className="w-full h-28 object-contain drop-shadow-lg mb-3 group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
+                <div className="relative w-full pt-2 pb-5 mb-3 flex items-end justify-center">
+                  <img
+                    src={cat.image}
+                    alt={cat.title}
+                    className="relative z-10 w-auto max-w-[80%] h-36 object-contain"
+                    loading="lazy"
+                  />
+                  {/* Естественная тень под машиной */}
+                  <div
+                    aria-hidden
+                    className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[60%] h-3 rounded-[50%] bg-foreground/20 blur-md"
+                  />
+                </div>
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-semibold text-foreground">{cat.title}</h3>
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
