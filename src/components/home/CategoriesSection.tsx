@@ -72,19 +72,19 @@ export default function CategoriesSection() {
             >
               <Link
                 to={`/services#${cat.anchor}`}
-                className="bg-card rounded-[10px] border border-border/60 shadow-[0_2px_10px_-2px_hsl(var(--foreground)/0.08)] hover:shadow-[0_18px_40px_-12px_hsl(var(--accent)/0.2)] transition-shadow flex flex-col p-5 group h-full"
+                className="bg-card rounded-[10px] border border-border/60 shadow-[0_2px_10px_-2px_hsl(var(--foreground)/0.08)] hover:shadow-[0_18px_40px_-12px_hsl(var(--accent)/0.2)] transition-shadow duration-300 flex flex-col p-5 group h-full"
               >
-                <div className="relative w-full pt-2 pb-5 mb-3 flex items-end justify-center">
+                <div className="relative w-full pt-4 pb-6 mb-3 flex items-end justify-center">
                   <img
                     src={cat.image}
                     alt={cat.title}
-                    className="relative z-10 w-auto max-w-[80%] h-36 object-contain"
+                    className="relative z-10 w-auto max-w-[80%] h-36 object-contain transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.03]"
                     loading="lazy"
                   />
-                  {/* Естественная тень под машиной */}
+                  {/* Мягкая овальная тень под машиной */}
                   <div
                     aria-hidden
-                    className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[60%] h-3 rounded-[50%] bg-foreground/20 blur-md"
+                    className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[55%] h-3 rounded-[50%] bg-foreground/15 blur-lg transition-all duration-300 ease-out group-hover:w-[65%] group-hover:bg-foreground/10 group-hover:blur-xl"
                   />
                 </div>
                 <div className="flex items-center justify-between mb-1">
