@@ -5,12 +5,12 @@ import { COMPANY } from "@/data/company";
 import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
-  { label: "Главная", path: "/" },
+  { label: "О компании", path: "/about" },
   { label: "Услуги", path: "/services" },
   { label: "Цены", path: "/prices" },
   { label: "Онлайн-запись", path: "/booking" },
   { label: "Документы", path: "/documents" },
-  { label: "О компании", path: "/about" },
+  { label: "Отзывы", path: "/#reviews" },
   { label: "Контакты", path: "/contacts" },
 ];
 
@@ -66,10 +66,10 @@ export default function Header() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`relative px-3 py-2 text-sm font-medium transition-colors ${
                   location.pathname === item.path
-                    ? "text-accent bg-accent/10"
-                    : "text-foreground/80 hover:text-foreground hover:bg-muted"
+                    ? "text-accent after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-accent after:rounded-full"
+                    : "text-foreground/80 hover:text-foreground"
                 }`}
               >
                 {item.label}
@@ -119,10 +119,10 @@ export default function Header() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileOpen(false)}
-                  className={`px-3 py-3 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 py-3 text-sm font-medium transition-colors border-l-2 ${
                     location.pathname === item.path
-                      ? "text-accent bg-accent/10"
-                      : "text-foreground/80 hover:bg-muted"
+                      ? "text-accent border-accent"
+                      : "text-foreground/80 border-transparent hover:bg-muted"
                   }`}
                 >
                   {item.label}
