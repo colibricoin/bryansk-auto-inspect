@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Clock, AlertTriangle } from "lucide-react";
 import { COMPANY } from "@/data/company";
+import scheduleIcon from "@/assets/icon-schedule.png";
+import busIcon from "@/assets/icon-bus.png";
 
 export default function ScheduleSection() {
   return (
@@ -20,9 +21,14 @@ export default function ScheduleSection() {
             className="bg-card border rounded-xl p-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-accent" />
-              </div>
+              <img
+                src={scheduleIcon}
+                alt="Календарь графика работы"
+                width={112}
+                height={112}
+                loading="lazy"
+                className="w-12 h-12 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+              />
               <h3 className="font-semibold text-lg">Общий график</h3>
             </div>
             <div className="space-y-3">
@@ -51,9 +57,14 @@ export default function ScheduleSection() {
             className="bg-card border rounded-xl p-6"
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-accent" />
-              </div>
+              <img
+                src={busIcon}
+                alt="Автобус с предупреждением"
+                width={112}
+                height={112}
+                loading="lazy"
+                className="w-12 h-12 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+              />
               <h3 className="font-semibold text-lg">Автобусы М2/М3</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-4">{COMPANY.busSchedule.title}</p>
