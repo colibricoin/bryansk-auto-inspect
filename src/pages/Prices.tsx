@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronRight, Download, Search } from "lucide-react";
+import { ChevronRight, Download, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePrices, PRICE_SOURCE } from "@/hooks/usePrices";
+import { generatePricesPdf } from "@/lib/pricesPdf";
+import { toast } from "@/hooks/use-toast";
 
 const FILTERS = [
   { label: "Все", value: "all" },
@@ -19,6 +21,7 @@ export default function Prices() {
   const { prices, loading } = usePrices();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   const filtered = prices.filter((p) => {
     const matchCat = filter === "all" || p.category_name === filter;
@@ -30,6 +33,29 @@ export default function Prices() {
       p.details.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
+
+  const filterLabel = FILTERS.find((f) => f.value === filter)?.label ?? "Все";
+
+  const handleDownloadPdf = async () => {
+    if (!filtered.length) {
+      toast({ title: "Нет данных для экспорта", variant: "destructive" });
+      return;
+    }
+    try {
+      setPdfLoading(true);
+      await generatePricesPdf({ prices: filtered, filterLabel });
+      toast({ title: "Прайс сформирован", description: `Категория: ${filterLabel}` });
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "Не удалось сформировать PDF",
+        description: "Проверьте подключение к интернету и попробуйте ещё раз.",
+        variant: "destructive",
+      });
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -116,6 +142,18 @@ export default function Prices() {
           )}
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+            <Button
+              onClick={handleDownloadPdf}
+              disabled={pdfLoading || loading}
+              className="bg-accent text-accent-foreground hover:bg-accent-hover font-semibold w-full sm:w-auto"
+            >
+              {pdfLoading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4 mr-2" />
+              )}
+              Скачать PDF-прайс ({filterLabel})
+            </Button>
             <a
               href="https://tehosmotr32.ru/wp-content/uploads/2025/02/preyskurant-tsen-na-2025.pdf"
               target="_blank"
@@ -123,7 +161,7 @@ export default function Prices() {
             >
               <Button variant="outline" className="font-semibold w-full sm:w-auto">
                 <Download className="w-4 h-4 mr-2" />
-                Скачать прайс PDF
+                Официальный прайс 2025
               </Button>
             </a>
           </div>
