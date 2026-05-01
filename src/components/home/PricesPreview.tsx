@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronRight, Download } from "lucide-react";
+import { ChevronRight, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePrices, PRICE_SOURCE } from "@/hooks/usePrices";
+import { generatePricesPdf } from "@/lib/pricesPdf";
+import { toast } from "@/hooks/use-toast";
 
 const FILTER_GROUPS = [
   { label: "Все", value: "all" },
@@ -17,7 +19,25 @@ const FILTER_GROUPS = [
 export default function PricesPreview() {
   const { prices, loading } = usePrices();
   const [filter, setFilter] = useState("all");
+  const [pdfLoading, setPdfLoading] = useState(false);
   const filtered = filter === "all" ? prices : prices.filter((p) => p.category_name === filter);
+  const filterLabel = FILTER_GROUPS.find((g) => g.value === filter)?.label ?? "Все";
+
+  const handleDownloadPdf = async () => {
+    if (!filtered.length) return;
+    try {
+      setPdfLoading(true);
+      await generatePricesPdf({ prices: filtered, filterLabel });
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "Не удалось сформировать PDF",
+        variant: "destructive",
+      });
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   return (
     <section id="prices" className="section-padding bg-background">
@@ -87,16 +107,18 @@ export default function PricesPreview() {
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </Link>
-          <a
-            href="https://tehosmotr32.ru/wp-content/uploads/2025/02/preyskurant-tsen-na-2025.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            onClick={handleDownloadPdf}
+            disabled={pdfLoading || loading}
+            className="bg-accent text-accent-foreground hover:bg-accent-hover font-semibold w-full sm:w-auto"
           >
-            <Button variant="outline" className="font-semibold w-full sm:w-auto">
+            {pdfLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
               <Download className="w-4 h-4 mr-2" />
-              Скачать прайс PDF
-            </Button>
-          </a>
+            )}
+            Скачать PDF ({filterLabel})
+          </Button>
         </div>
       </div>
     </section>
