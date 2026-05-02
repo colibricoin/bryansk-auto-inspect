@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Phone, Menu, X, MapPin, ChevronRight } from "lucide-react";
 import { COMPANY } from "@/data/company";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,31 @@ const NAV_ITEMS = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    path: string,
+  ) => {
+    if (!path.includes("#")) return;
+    const [pathname, hash] = path.split("#");
+    e.preventDefault();
+    setMobileOpen(false);
+    if (location.pathname === (pathname || "/")) {
+      scrollToId(hash);
+    } else {
+      navigate(pathname || "/");
+      // wait for the target page to render
+      setTimeout(() => scrollToId(hash), 120);
+    }
+  };
 
   return (
     <>
@@ -66,6 +91,7 @@ export default function Header() {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={(e) => handleNavClick(e, item.path)}
                 className={`relative px-3 py-2 text-sm font-medium transition-colors ${
                   location.pathname === item.path
                     ? "text-accent after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-accent after:rounded-full"
@@ -118,7 +144,13 @@ export default function Header() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(e) => {
+                    if (item.path.includes("#")) {
+                      handleNavClick(e, item.path);
+                    } else {
+                      setMobileOpen(false);
+                    }
+                  }}
                   className={`px-3 py-3 text-sm font-medium transition-colors border-l-2 ${
                     location.pathname === item.path
                       ? "text-accent border-accent"
