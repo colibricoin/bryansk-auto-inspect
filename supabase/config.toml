@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.admin-seo-locations]
 verify_jwt = false
+
+[functions.mcp]
+verify_jwt = false

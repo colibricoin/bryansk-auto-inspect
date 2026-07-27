@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "bryansk-tehosmotr-mcp",
+      "version": "0.1.0",
+      "title": "Техосмотр Брянск — MCP"
+    },
+    "tools": [
+      {
+        "name": "list_prices",
+        "title": "Список цен на техосмотр",
+        "description": "Возвращает актуальные цены на техосмотр по всем категориям ТС (или по одной категории, если указан category_code, например M1, N1, L).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category_code": {
+              "description": "Опциональный код категории ТС, например: L, M1, M2, M3, N1, N2, N3, O1, O2, O3, O4.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_seo_locations",
+        "title": "Список SEO-страниц (районы и услуги)",
+        "description": "Возвращает активные SEO-страницы сайта: районы Брянска и тематические страницы (цены, диагностическая карта, для ОСАГО и т.д.) с их slug, заголовками и путями.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "page_type": {
+              "description": "Опциональный фильтр по типу страницы, например: district, service.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_contact_info",
+        "title": "Контакты и график работы пункта техосмотра",
+        "description": "Возвращает адрес, телефон, email и график работы пункта техосмотра в Брянске.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_inspection_request",
+        "title": "Создать заявку на техосмотр",
+        "description": "Создаёт заявку клиента на прохождение техосмотра. Оператор перезвонит по указанному телефону для подтверждения даты и времени.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "description": "Имя клиента."
+            },
+            "phone": {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 20,
+              "description": "Контактный телефон клиента."
+            },
+            "vehicle_category": {
+              "description": "Код категории ТС: L, M1, M2, M3, N1, N2, N3, O1, O2, O3, O4.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10
+            },
+            "plate_number": {
+              "description": "Госномер автомобиля.",
+              "type": "string",
+              "maxLength": 15
+            },
+            "desired_date": {
+              "description": "Желаемая дата в формате YYYY-MM-DD.",
+              "type": "string",
+              "maxLength": 20
+            },
+            "comment": {
+              "description": "Дополнительный комментарий.",
+              "type": "string",
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "name",
+            "phone"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
